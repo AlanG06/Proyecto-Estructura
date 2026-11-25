@@ -40,6 +40,7 @@ struct Nodo {
 };
 
 Nodo* raiz = NULL;
+int totalPaq = 0;
 
 int cola[MAX], frente = 0, cantCola = 0;   // cola circular
 int pila[MAX], tope = -1;                  // historial
@@ -92,6 +93,7 @@ void listarSucursales() {
 bool insertar(Nodo*& n, Paquete p) {
     if (n == NULL) {
         n = new Nodo{p, NULL, NULL};
+        totalPaq++;
         return true;
     }
     if (p.folio < n->p.folio) return insertar(n->izq, p);
@@ -113,7 +115,8 @@ void mostrar(Paquete p) {
     cout << "Folio: " << p.folio << endl;
     cout << "Descripcion: " << p.desc << endl;
     cout << "Peso: " << fixed << setprecision(2) << p.peso << " kg" << endl;
-    cout << "Ruta: " << suc[p.origen] << " -> " << suc[p.destino] << endl;
+    cout << "Origen: " << suc[p.origen] << endl;
+    cout << "Destino: " << suc[p.destino] << endl;
     cout << "Estado: " << p.estado << endl;
 }
 
@@ -127,12 +130,16 @@ bool encolar(int folio) {
     return true;
 }
 
+int verFrente() { return cola[frente]; }
+
 int desencolar() {
     int folio = cola[frente];
     frente = (frente + 1) % MAX;
     cantCola--;
     return folio;
 }
+
+int verCima() { return pila[tope]; }
 
 bool apilar(int folio) {
     if (tope == MAX - 1) return false;
@@ -208,6 +215,7 @@ void radixSort(Paquete arr[], int n) {
 // ---------- opciones ----------
 
 void registrar() {
+    if (totalPaq == MAX_PAQ) { cout << "Ya no caben mas paquetes (maximo " << MAX_PAQ << ")" << endl; return; }
     Paquete p;
     p.folio = leerInt("Folio: ");
     if (p.folio <= 0)              { cout << "El folio debe ser positivo" << endl; return; }
@@ -227,6 +235,7 @@ void registrar() {
 }
 
 void buscarPaquete() {
+    if (!raiz) { cout << "El arbol esta vacio, no hay paquetes" << endl; return; }
     Nodo* n = buscar(raiz, leerInt("Folio: "));
     if (n) mostrar(n->p);
     else cout << "No existe ese folio" << endl;
@@ -240,6 +249,7 @@ void recorridos() {
 }
 
 void agregarCola() {
+    if (!raiz) { cout << "El arbol esta vacio, no hay paquetes" << endl; return; }
     Nodo* n = buscar(raiz, leerInt("Folio: "));
     if (!n)                           cout << "No existe ese folio" << endl;
     else if (n->p.estado != "Registrado") cout << "Solo se encolan paquetes Registrados (este esta " << n->p.estado << ")" << endl;
@@ -255,11 +265,12 @@ void pendientes() {
     cout << "Frente -> ";
     for (int i = 0; i < cantCola; i++) cout << cola[(frente + i) % MAX] << " ";
     cout << "<- Final" << endl;
+    cout << "En el frente esta: " << verFrente() << endl;
 }
 
 void despachar() {
     if (cantCola == 0) { cout << "La cola esta vacia" << endl; return; }
-    Paquete& p = buscar(raiz, cola[frente])->p;
+    Paquete& p = buscar(raiz, verFrente())->p;
     int ruta[N];
     int largo = buscarRuta(p.origen, p.destino, ruta);
 
@@ -281,7 +292,7 @@ void despachar() {
 
 void ultimo() {
     if (tope == -1) cout << "No hay despachos" << endl;
-    else mostrar(buscar(raiz, pila[tope])->p);
+    else mostrar(buscar(raiz, verCima())->p);
 }
 
 void historialDespachos() {

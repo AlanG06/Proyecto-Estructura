@@ -7,11 +7,11 @@ Se cargan los 8 paquetes de prueba al iniciar (respuesta `s`). Las pruebas se ha
 | 1 | Registrar folio repetido (op. 1) | Folio 50 | Se rechaza el registro duplicado | "Ese folio ya existe" ✔ |
 | 2 | Registrar con peso inválido (op. 1) | Folio 90, "Caja", peso 0 | Se rechaza, el peso debe ser mayor a 0 | "El peso debe ser mayor a 0" ✔ |
 | 3 | Registrar con origen = destino (op. 1) | Folio 91, "Caja", 2 kg, origen 3, destino 3 | Se rechaza | "Origen y destino deben ser distintos" ✔ |
-| 4 | Buscar folio existente (op. 2) | 45 | Muestra todos los datos del paquete | Documentos, 0.80 kg, Puerto → Centro, Registrado ✔ |
+| 4 | Buscar folio existente (op. 2) | 45 | Muestra todos los datos del paquete | Documentos, 0.80 kg, origen Puerto, destino Centro, Registrado ✔ |
 | 5 | Buscar folio inexistente (op. 2) | 99 | Avisa que no existe | "No existe ese folio" ✔ |
 | 6 | Mostrar recorridos (op. 3) | — | Pre: 50 30 20 40 45 70 60 80 / In: 20 30 40 45 50 60 70 80 / Post: 20 45 40 30 60 80 70 50 | Iguales al árbol dibujado ✔ |
 | 7 | Matriz y grados (op. 11) | — | Matriz inicial; Poniente entrada 0, Puerto salida 0 | Coincide con la matriz del diseño ✔ |
-| 8 | Encolar tres paquetes (op. 4 y 5) | 50, 70, 30 | Cola en orden de llegada, estado En espera | Frente → 50 70 30 ← Final ✔ |
+| 8 | Encolar tres paquetes (op. 4 y 5) | 50, 70, 30 | Cola en orden de llegada, estado En espera | Frente → 50 70 30 ← Final, en el frente: 50 ✔ |
 | 9 | Despachar paquete con escala (op. 6) | Frente = 50 (Centro → Puerto) | Imprime la ruta completa y pasa al historial | Centro → Norte → Puerto, "Paquete despachado" ✔ |
 | 10 | Despachar paquete sin ruta (op. 6 y 5) | Frente = 70 (Centro → Poniente) | Pasa al final de la cola y sigue En espera | "no hay ruta, pasa al final"; cola: 30 70 ✔ |
 | 11 | Agregar conexión (op. 9) | Origen 3 (Oriente), destino 4 (Poniente) | Se agrega la conexión | "Conexion agregada: Oriente -> Poniente" ✔ |
@@ -26,3 +26,6 @@ Se cargan los 8 paquetes de prueba al iniciar (respuesta `s`). Las pruebas se ha
 | 20 | Opción fuera de rango | 20 | Avisa que no es válida | "Opcion no valida" ✔ |
 | 21 | Despachar con cola vacía (op. 6) | — | Avisa que la cola está vacía | "La cola esta vacia" ✔ |
 | 22 | Encolar con la cola llena (op. 4) | 11 paquetes Registrados, capacidad 10 | El 11° no entra y sigue Registrado | "La cola esta llena, sigue como Registrado" ✔ |
+| 23 | Despachar con el historial lleno (op. 6) | 10 despachos hechos, capacidad 10, folio 11 al frente | El paquete se queda al frente y se informa el motivo | "Hay ruta pero el historial esta lleno, el paquete se queda al frente"; cola: 11 ✔ |
+| 24 | Operaciones con todo vacío | Iniciar con `n`; op. 2, 4, 3, 12, 5, 6, 7, 8 | Mensaje de estructura vacía en cada una | "El arbol esta vacio", "La cola esta vacia", "No hay despachos" ✔ |
+| 25 | Registrar más de 100 paquetes (op. 1) | Paquete 101 | Se rechaza porque el arreglo auxiliar está lleno | "Ya no caben mas paquetes (maximo 100)" ✔ |
